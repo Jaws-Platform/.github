@@ -76,6 +76,31 @@ CI runs these jobs on every pull request, and all of them are required on
 | `pr-title` | The title is a Conventional Commit and passes the commit header rules |
 | `commitlint-rules` | Unit tests for the local rule, and the fixture messages |
 
+## Releases and versioning
+
+Releases are managed by [Release Please](https://github.com/googleapis/release-please).
+
+- One version for the whole repository (`release-type: simple`), tagged
+  `vX.Y.Z`. Release Please owns `CHANGELOG.md` and `version.txt`; nobody edits
+  them by hand.
+- On every push to `main`, the `release-please` workflow opens or updates a
+  release pull request authored by `jaws-platform-release-bot[bot]`, a GitHub
+  App owned by the `Jaws-Platform` organization (Contents and Pull requests,
+  read and write). The repository secrets `RELEASE_BOT_CLIENT_ID` and
+  `RELEASE_BOT_PRIVATE_KEY` are its credentials. CI runs on it like any other
+  pull request.
+- **Merging the Release Please pull request is the deliberate, human-reviewed
+  act that releases a version.** Nobody creates tags by hand.
+- The profile is live as soon as a change merges to `main`; a release only
+  records it in the changelog.
+
+| Change | Commit type | Bump |
+|---|---|---|
+| Removing a profile section or a default community health file | `feat!` / `fix!` | major (minor while `0.x`) |
+| A new profile section or default file | `feat` | minor |
+| A correction to the profile | `fix` | patch |
+| `docs`, `chore`, `ci`, `refactor`, `test`, `style`, `build` | no release on their own |
+
 ## Repository settings
 
 `scripts/apply-repo-settings.sh` applies the settings through the GitHub API:
